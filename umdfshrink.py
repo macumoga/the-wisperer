@@ -18,15 +18,19 @@ blocked = [
     "rotationceiling"
 ]
 
+from os import chdir
+from os.path import dirname,abspath
+chdir(dirname(abspath(__file__)))
+
 with open("TEXTMAP.txt","rt") as tsf:
-    lines = [lines.strip() for line in tsf]
+    lines = [line.strip() for line in tsf]
 
 i = 0
 while(i < len(lines)):
 
     #trim useless newlines
     if(lines[i] == "{"):
-        lines[i-1].append("{")
+        lines[i-1] += "{"
         lines.pop(i)
         continue
 
@@ -36,20 +40,25 @@ while(i < len(lines)):
         continue
 
     #Strip out redundant flags
-    for keyword in blocked:
-        if (keyword in lines[i]):
-            lines.pop(i)
-            continue
+    if any(word in lines[i] for word in blocked):
+        lines.pop(i)
+        continue
 
     #Defloat keyvalues
     for j in range(len(lines[i])):
-        if lines[i][j] == '.':
+
+        if (lines[i][j] == '.'):
             lines[i] = lines[i][0:j]
-            lines[i][j] = ';'
-        if lines[i][j+1] == ' ' and lines[i][j+2] == '/' and lines[i][j+3] == '/':
-            lines[i] = lines[i][0:j]
+            lines[i] += ";"
+            break
+
+        if (j > 1) and (lines[i][j-2] == ' ' and lines[i][j-1] == '/' and lines[i][j] == '/'):
+            lines[i] = lines[i][0:j-2]
+            break
 
     i += 1
+
+print(i)
 
 with open("TEXTMAP_EXP.txt","wt") as tsf:
     tsf.write("\n".join(lines))
