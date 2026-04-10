@@ -1,20 +1,20 @@
 lines:list[str]
 
 blocked = [
-    "skill6"
-    "skill7"
-    "skill8"
-    "coop"
-    "dm"
-    "class2"
-    "class3"
-    "class4"
-    "class5"
-    "xpanningfloor"
-    "ypanningfloor"
-    "xpanningceiling"
-    "ypanningceiling"
-    "rotationfloor"
+    "skill6",
+    "skill7",
+    "skill8",
+    "coop",
+    "dm",
+    "class2",
+    "class3",
+    "class4",
+    "class5",
+    "xpanningfloor",
+    "ypanningfloor",
+    "xpanningceiling",
+    "ypanningceiling",
+    "rotationfloor",
     "rotationceiling"
 ]
 
@@ -40,9 +40,12 @@ while(i < len(lines)):
         continue
 
     #Strip out redundant flags
-    if any(word in lines[i] for word in blocked):
-        lines.pop(i)
-        continue
+    for kwd in blocked:
+        #print(f"{kwd=}, {lines[i]=}")
+        if kwd in lines[i]:
+            #print("removed")
+            lines.pop(i)
+            continue
 
     #Defloat keyvalues
     for j in range(len(lines[i])):
